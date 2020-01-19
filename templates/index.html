@@ -1,0 +1,393 @@
+
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>K means Clustering</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets_files/materialdesignicons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets_files/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets_files/vendor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets_files/jqvmap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets_files/flag-icon.css') }}">
+    <link rel="shortcut icon" href="http://www.urbanui.com/yoraui/template/images/favicon.png">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/exporting.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/export-data.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/accessibility.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/vendor.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_002.js') }}"></script>
+    <script  type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_003.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_007.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_004.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_006.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery_008.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/jquery.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/off-canvas.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/hoverable-collapse.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/template.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/settings.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/todolist.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='assets_files/dashboard.j') }}"></script>
+
+   <script>
+    $(document).ready(function(){
+
+
+  var formcreate = $('.createsurat');
+  var process_cluster = $('.process_cluster');
+  process_cluster.on('submit', function(e) {
+       e.preventDefault()
+       let formData = new FormData(this);
+       console.log(formData)
+              $.ajax({
+                  type: process_cluster.attr('method'),
+                  url: process_cluster.attr('action'),
+                  data: formData,
+                  dataType: 'JSON',
+                  contentType: false,
+
+                  processData: false,
+                  success: function (x) {
+                     Highcharts.chart('container', {
+    chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+    },
+    title: {
+        text: $("input[name='x_radio']:checked").val()+' Versus '+$("input[name='y_radio']:checked").val()
+    },
+    subtitle: {
+        text: 'Source: Heinz  2003'
+    },
+    xAxis: {
+        title: {
+            enabled: true,
+            text: $("input[name='x_radio']:checked").val()
+        },
+        startOnTick: true,
+        endOnTick: true,
+        showLastLabel: true
+    },
+    yAxis: {
+        title: {
+            text: $("input[name='y_radio']:checked").val()
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'left',
+        verticalAlign: 'top',
+        x: 100,
+        y: 70,
+        floating: true,
+        backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
+        borderWidth: 1
+    },
+    plotOptions: {
+        scatter: {
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x} cm, {point.y} kg'
+            }
+        }
+    },
+    series: x
+})
+                  }
+              })
+  });
+
+  formcreate.on('submit', function(e) {
+      e.preventDefault()
+      let formData = new FormData(this);
+              $.ajax({
+                type: formcreate.attr('method'),
+                url: formcreate.attr('action'),
+                data: formData,
+                dataType:'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function(x){
+                    console.log(x)
+                    let ylabel ="";
+                    let xlabel ="";
+                    x.map(c=>{
+                        ylabel +='<label class="container"><input type="radio"  name="y_radio" value='+c.header+'> '+c.header+'<span class="checkmark"></span></label>';
+                        xlabel +='<label class="container"><input type="radio"  name="x_radio" value='+c.header+'> '+c.header+'<span class="checkmark"></span></label>';
+                    });
+                    $(".ylabel").html(ylabel)
+                    $(".xlabel").html(xlabel)
+                }
+        })
+  });
+
+    })
+        </script>
+
+
+    <style>
+.highcharts-figure, .highcharts-data-table table {
+    min-width: 360px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+	font-family: Verdana, sans-serif;
+	border-collapse: collapse;
+	border: 1px solid #EBEBEB;
+	margin: 10px auto;
+	text-align: center;
+	width: 100%;
+	max-width: 500px;
+}
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+.highcharts-data-table th {
+	font-weight: 600;
+    padding: 0.5em;
+}
+.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+    padding: 0.5em;
+}
+.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+
+</style>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <div class="horizontal-menu">
+      <nav class="navbar top-navbar col-lg-12 col-12 p-0">
+        <div class="container">
+          <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" >
+            <a class="navbar-brand brand-logo" href="" style="height:"510px"> <img src="{{ url_for('static', filename='assets_filexs/learning.jpg') }}" width="200px"  /></a>
+{#            <a class="navbar-brand brand-logo-mini" href="http://www.urbanui.com/yoraui/template/demo/horizontal-default-light/index.html"><img src="assets_files/logo-mini.svg" alt="logo"></a>#}
+          </div>
+          <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <ul class="navbar-nav mr-lg-2">
+              <li class="nav-item nav-search d-none d-lg-block">
+
+              </li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-right">
+              <li class="nav-item dropdown">
+
+              </li>
+              <li class="nav-item dropdown">
+
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                  <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                  <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-success">
+                        <i class="mdi mdi-information mx-0"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                      <p class="font-weight-light small-text mb-0 text-muted">
+                        Just now
+                      </p>
+                    </div>
+                  </a>
+                  <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-warning">
+                        <i class="mdi mdi-settings mx-0"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <h6 class="preview-subject font-weight-normal">Settings</h6>
+                      <p class="font-weight-light small-text mb-0 text-muted">
+                        Private message
+                      </p>
+                    </div>
+                  </a>
+                  <a class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-info">
+                        <i class="mdi mdi-account-box mx-0"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                      <p class="font-weight-light small-text mb-0 text-muted">
+                        2 days ago
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              </li>
+
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="horizontal-menu-toggle">
+              <span class="mdi mdi-menu"></span>
+            </button>
+          </div>
+        </div>
+      </nav>
+      <nav class="bottom-navbar">
+        <div class="container">
+          <ul class="nav page-navigation">
+
+            <li class="nav-item mega-menu">
+              <a href="#" class="nav-link">
+                <!-- <i class="mdi mdi-puzzle-outline menu-icon"></i> -->
+                <span class="menu-title">Decission Support System</span>
+                <!-- <i class="menu-arrow"></i> -->
+              </a>
+
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+          <div class="dashboard-header d-flex flex-column grid-margin">
+            <div class="d-flex align-items-center justify-content-between flex-wrap border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-center">
+                <h4 class="mb-0 font-weight-bold">K-means Clustering</h4>
+              </div>
+                <form method="post" enctype="multipart/form-data" action="/upload" class="createsurat">
+                <div class="button-wrapper d-flex align-items-center mt-md-3 mt-xl-0">
+                <div class="dropdown mr-3 d-none d-md-block">
+                  Upload File :
+                </div>
+                <div class="dropdown mr-3 d-none d-md-block">
+                  <input type="file" name="fileUpload" />
+                </div>
+                <button class="btn btn-primary btn-sm mr-3 d-none d-md-block">Upload</button>
+                </div>
+                </form>
+
+            </div>
+{#            <div class="d-md-flex align-items-center justify-content-between flex-wrap">#}
+{#              <div class="d-flex align-items-center">#}
+{#                <p class="mb-0 font-weight-medium mr-2 d-none d-md-block">Categories :</p>#}
+{#                <div class="p-1 bg-danger mr-1"></div>#}
+{#                <p class="mb-0 font-weight-medium cursor-pointer mr-3">#Sales</p>#}
+{#                <div class="p-1 bg-success mr-1"></div>#}
+{#                <p class="mb-0 font-weight-medium cursor-pointer mr-3">#Purchases</p>#}
+{#                <div class="p-1 bg-info mr-1"></div>#}
+{#                <p class="mb-0 font-weight-medium cursor-pointer mr-3">#Returns</p>#}
+{#              </div>#}
+{#            </div>#}
+          </div>
+
+          <div class="row">
+
+
+
+            <div class="col-xl-3 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <p class="card-title">Filter Koordinat</p>
+                  <div class="row mt-4">
+                      <form method="post" action="/process_cluster" class="process_cluster" >
+                      <h5>Y Label</h5>
+                      <br/>
+                    <div class="ylabel"></div>
+                    <hr/>
+                        <h5>X Label</h5>
+                      <br/>
+                      <div class="xlabel"></div>
+                      <input type="text" placeholder="Cluster Number" name="cluster"/>&nbsp;<button>Process</button>
+                        </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-xl-9 grid-margin stretch-card">
+              <div class="card">
+                <div class="row">
+                  <div class="col-md-12 stretch-card">
+                    <div class="card-body">
+                      <p class="card-title">Result Chart</p>
+                      <div>
+
+
+                          <figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+{#        Scatter charts are often used to visualize the relationships#}
+{#        between data in two dimensions. This chart is visualizing#}
+{#        height and weight by gender, showing a clear trend where men#}
+{#        are on average taller and heavier than women.#}
+    </p>
+</figure>
+{#                        <div id="recentRevenueChart" class="flot-chart" style="padding: 0px;"><canvas class="flot-base" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 694px; height: 305px;" width="694" height="305"></canvas><div class="flot-text" style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; inset: 0px;"><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 17px; text-align: center;">06:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 105px; text-align: center;">09:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 193px; text-align: center;">12:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 281px; text-align: center;">13:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 369px; text-align: center;">16:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 457px; text-align: center;">19:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 545px; text-align: center;">21:00</div><div style="position: absolute; max-width: 86px; top: 292px; font: 400 11px / 13px Arial, sans-serif; color: rgb(112, 115, 124); left: 633px; text-align: center;">23:00</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; inset: 0px;"><div style="position: absolute; top: 232px; font: 600 11px / 13px Archivo, sans-serif; color: rgb(52, 54, 64); left: 0px; text-align: right;">$6320</div><div style="position: absolute; top: 179px; font: 600 11px / 13px Archivo, sans-serif; color: rgb(52, 54, 64); left: 0px; text-align: right;">$6340</div><div style="position: absolute; top: 126px; font: 600 11px / 13px Archivo, sans-serif; color: rgb(52, 54, 64); left: 0px; text-align: right;">$6360</div><div style="position: absolute; top: 73px; font: 600 11px / 13px Archivo, sans-serif; color: rgb(52, 54, 64); left: 0px; text-align: right;">$6380</div><div style="position: absolute; top: 19px; font: 600 11px / 13px Archivo, sans-serif; color: rgb(52, 54, 64); left: 0px; text-align: right;">$6400</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 694px; height: 305px;" width="694" height="305"></canvas></div>#}
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="w-100 clearfix">
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018  All rights reserved.</span>
+            <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted &amp; made with <i class="mdi mdi-heart-outline text-danger"></i></span> -->
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+
+
+
+
+  <!-- End custom js for this page-->
+
+
+</html>
+
