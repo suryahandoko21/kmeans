@@ -61,7 +61,7 @@
         text: $("input[name='x_radio']:checked").val()+' Versus '+$("input[name='y_radio']:checked").val()
     },
     subtitle: {
-        text: 'Source: Heinz  2003'
+        text: 'Tugas DSS'
     },
     xAxis: {
         title: {
@@ -81,8 +81,8 @@
         layout: 'vertical',
         align: 'left',
         verticalAlign: 'top',
-        x: 100,
-        y: 70,
+        x: 70,
+        y: -10,
         floating: true,
         backgroundColor: Highcharts.defaultOptions.chart.backgroundColor,
         borderWidth: 1
@@ -107,7 +107,7 @@
             },
             tooltip: {
                 headerFormat: '<b>{series.name}</b><br>',
-                pointFormat: '{point.x} cm, {point.y} kg'
+                pointFormat: '{point.x} , {point.y} '
             }
         }
     },
@@ -129,6 +129,7 @@
                 cache: false,
                 processData: false,
                 success:function(x){
+                    $(".container").html("")
                     console.log(x)
                     let ylabel ="";
                     let xlabel ="";
@@ -146,42 +147,42 @@
         </script>
 
 
-    <style>
-.highcharts-figure, .highcharts-data-table table {
-    min-width: 360px;
-    max-width: 800px;
-    margin: 1em auto;
-}
-
-.highcharts-data-table table {
-	font-family: Verdana, sans-serif;
-	border-collapse: collapse;
-	border: 1px solid #EBEBEB;
-	margin: 10px auto;
-	text-align: center;
-	width: 100%;
-	max-width: 500px;
-}
-.highcharts-data-table caption {
-    padding: 1em 0;
-    font-size: 1.2em;
-    color: #555;
-}
-.highcharts-data-table th {
-	font-weight: 600;
-    padding: 0.5em;
-}
-.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
-    padding: 0.5em;
-}
-.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
-}
-.highcharts-data-table tr:hover {
-    background: #f1f7ff;
-}
-
-</style>
+{#    <style>#}
+{#.highcharts-figure, .highcharts-data-table table {#}
+{#    min-width: 360px;#}
+{#    max-width: 800px;#}
+{#    margin: 1em auto;#}
+{#}#}
+{##}
+{#.highcharts-data-table table {#}
+{#	font-family: Verdana, sans-serif;#}
+{#	border-collapse: collapse;#}
+{#	border: 1px solid #EBEBEB;#}
+{#	margin: 10px auto;#}
+{#	text-align: center;#}
+{#	width: 100%;#}
+{#	max-width: 500px;#}
+{#}#}
+{#.highcharts-data-table caption {#}
+{#    padding: 1em 0;#}
+{#    font-size: 1.2em;#}
+{#    color: #555;#}
+{#}#}
+{#.highcharts-data-table th {#}
+{#	font-weight: 600;#}
+{#    padding: 0.5em;#}
+{#}#}
+{#.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {#}
+{#    padding: 0.5em;#}
+{#}#}
+{#.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {#}
+{#    background: #f8f8f8;#}
+{#}#}
+{#.highcharts-data-table tr:hover {#}
+{#    background: #f1f7ff;#}
+{#}#}
+{##}
+{#</style>#}
 </head>
 
 <body>
@@ -190,7 +191,7 @@
       <nav class="navbar top-navbar col-lg-12 col-12 p-0">
         <div class="container">
           <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" >
-            <a class="navbar-brand brand-logo" href="" style="height:"510px"> <img src="{{ url_for('static', filename='assets_filexs/learning.jpg') }}" width="200px"  /></a>
+            <a class="navbar-brand brand-logo" href="" style="height:"510px"> <img src="{{ url_for('static', filename='assets_files/ds.png') }}" width="35px"  />  DATA SCIENCE</a>
 {#            <a class="navbar-brand brand-logo-mini" href="http://www.urbanui.com/yoraui/template/demo/horizontal-default-light/index.html"><img src="assets_files/logo-mini.svg" alt="logo"></a>#}
           </div>
           <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
@@ -326,7 +327,7 @@
                         <h5>X Label</h5>
                       <br/>
                       <div class="xlabel"></div>
-                      <input type="text" placeholder="Cluster Number" name="cluster"/>&nbsp;<button>Process</button>
+                      <input type="text" placeholder="Cluster Number" name="cluster" style="padding: 3px"/>&nbsp;<button>Process</button>
                         </form>
                   </div>
                 </div>
@@ -369,7 +370,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="w-100 clearfix">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018  All rights reserved.</span>
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2020  All rights reserved.</span>
             <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted &amp; made with <i class="mdi mdi-heart-outline text-danger"></i></span> -->
           </div>
         </footer>

@@ -66,24 +66,26 @@ def process_cluster():
         df = pd.read_csv('upload/'+session.get('image_upload'))
     else:
         df = pd.read_excel("upload/"+session.get('image_upload'))
-    # df = pd.read_csv(session.get('image_upload'))
     km = KMeans(n_clusters=int(cluster))
 
     y_predicted = km.fit_predict(df[[y_radio,x_radio]])
     df['cluster'] = y_predicted
     km.cluster_centers_
-
     list = []
     for i in range(0, int(cluster)):
         list.append(df[df.cluster == int(i)].to_dict('records'))
     list_data = []
+    centroid =[]
     for i in range(0, int(cluster)):
-
+        centroid.append([km.cluster_centers_[:, 0][i],km.cluster_centers_[:, 1][i]])
         for y in list[i]:
             list_data.append(y)
 
     data = sorted(list_data, key=itemgetter('cluster'))
     val_dict =[]
+    cent ={'name': 'Centroid', 'color': 'rgba(30, 130, 76, 1)',
+     'data': centroid}
+    val_dict.append(cent)
     for key, value in itertools.groupby(list_data, key=itemgetter('cluster')):
         my_dict = {"name": "Cluster" + str(key), "color": color[key]}
         clus = []
@@ -91,7 +93,11 @@ def process_cluster():
             clus.append([i.get(x_radio), i.get(y_radio)])
         my_dict["data"] = clus
         val_dict.append(my_dict)
-    print(val_dict)
+
+
+
+
+    # print(cent)
     return make_response(json.dumps(val_dict), 200)
 
 if __name__ == '__main__':
