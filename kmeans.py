@@ -14,7 +14,11 @@ import numpy as np
 import re
 from flask_restful import Api, Resource
 from io import BytesIO
+import logging
+import sys
 app = Flask(__name__)
+
+
 app.config['UPLOAD_FOLDER'] = './upload'
 
 app.secret_key = 'oke bro'
@@ -54,6 +58,7 @@ def upload_process():
 
 @app.route('/process_cluster',methods = ['GET','POST'])
 def process_cluster():
+    
     color = ['rgba(199, 205, 250, 1)', 'rgba(18, 41, 211, 1)', 'rgba(18, 211, 22, 1)', 'rgba(142, 86, 143, 1)',
              'rgba(223, 83, 83, .5)', 'rgba(0, 0, 0, 1)', 'rgba(255, 17, 0, 1)', 'rgba(166, 115, 89, 1)',
              'rgba(85, 64, 53, 1)']
@@ -76,15 +81,25 @@ def process_cluster():
         list.append(df[df.cluster == int(i)].to_dict('records'))
     list_data = []
     centroid =[]
+    print("Isi List",list)
     for i in range(0, int(cluster)):
         centroid.append([km.cluster_centers_[:, 0][i],km.cluster_centers_[:, 1][i]])
+        print("==============================================================================list cluster==============================================================================")
+        print(i)
+     
         for y in list[i]:
+            print(y)
+            
             list_data.append(y)
-
+        print("====================================end=============================================================================================================================")
     data = sorted(list_data, key=itemgetter('cluster'))
+    print("=====================================")
+    print(data)
+    print("=====================================")
     val_dict =[]
     cent ={'name': 'Centroid', 'color': 'rgba(30, 130, 76, 1)',
      'data': centroid}
+    print(cent)
     val_dict.append(cent)
     for key, value in itertools.groupby(list_data, key=itemgetter('cluster')):
         my_dict = {"name": "Cluster" + str(key), "color": color[key]}
@@ -94,6 +109,8 @@ def process_cluster():
         my_dict["data"] = clus
         val_dict.append(my_dict)
 
+    print(val_dict)
+
 
 
 
@@ -101,4 +118,18 @@ def process_cluster():
     return make_response(json.dumps(val_dict), 200)
 
 if __name__ == '__main__':
+    print("This is an error message.", file=sys.stderr) 
+    # logging.basicConfig(format="%(levelname)s %(message)s")
+
+    # stdout_logger = logging.Logger(name="stdout_logger", level=logging.DEBUG)
+    # stderr_logger = logging.Logger(name="stderr_logger", level=logging.DEBUG)
+
+    # stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    # stderr_handler = logging.StreamHandler(stream=sys.stderr)
+
+    # stdout_logger.addHandler(hdlr=stdout_handler)
+    # stderr_logger.addHandler(hdlr=stderr_handler)
+
+    # stdout_logger.info("this will output to stdout")
+    # stderr_logger.info("this will output to stderr")
     app.run()
